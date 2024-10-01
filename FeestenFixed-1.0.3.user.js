@@ -12,48 +12,59 @@
 (function () {
     'use strict';
 
-const draggableStyles = `
-    .draggable-box {
-        position: fixed; /* Ensure the box stays fixed relative to the viewport */
-        bottom: 20px; /* Adjust as needed */
-        right: 20px; /* Adjust as needed */
-        background-color: rgba(255, 255, 255, 0.8);
-        border: 1px solid #ccc;
-        padding: 10px;
-        max-width: 300px;
-        max-height: fit-content;
-        overflow: auto;
-        z-index: 999;
-        cursor: move;
-        border-radius: 20px;
-        resize: none; /* Disable resizing */
-    }
+    const draggableStyles = `
+        .draggable-box {
+            position: fixed; /* Ensure the box stays fixed relative to the viewport */
+            bottom: 20px; /* Adjust as needed */
+            right: 20px; /* Adjust as needed */
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid #ccc;
+            padding: 10px;
+            max-width: 300px;
+            max-height: fit-content;
+            overflow: auto;
+            z-index: 999;
+            cursor: move;
+            border-radius: 20px;
+            resize: none; /* Disable resizing */
+        }
 
-    #triggerButton {
-        position: fixed;
-        bottom: 20px;
-        right: 220px;
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        border-radius: 25px;
-        padding: 12px 24px;
-        font-size: 18px;
-        cursor: pointer;
-        z-index: 1000; /* Ensure the button is above other elements */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease, background-color 0.3s ease;
-    }
+        #triggerButton {
+            position: fixed;
+            bottom: 20px;
+            right: 220px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 24px;
+            font-size: 18px;
+            cursor: pointer;
+            z-index: 1000; /* Ensure the button is above other elements */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
 
-    #triggerButton:hover {
-        background-color: #45a049;
-        transform: translateY(-2px);
-    }
+        #triggerButton:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
 
-    #triggerButton.active {
-        background-color: #f44336; /* Red color when active */
-    }
-`;
+        #triggerButton.active {
+            background-color: #f44336; /* Red color when active */
+        }
+
+        #masterButton {
+            bottom: 20px;
+            right: 20px;
+            background-color: yellow;
+            color: blue;
+            position; fixed;
+            border: none;
+            font-size: 10px;
+            cursor: pointer;
+        }
+    `;
 
     const draggableStyleElement = document.createElement('style');
     draggableStyleElement.innerHTML = draggableStyles;
@@ -110,36 +121,56 @@ const draggableStyles = `
         return `<a href="#${encodedData}" class="gp_town_link">${townName}</a>`;
     }
 
-    // Button to trigger the method
-    const triggerButton = document.createElement('button');
-    triggerButton.textContent = 'Show SFs';
-    triggerButton.id = 'triggerButton';
-    document.body.appendChild(triggerButton);
+    function addButton() {
+        // Button to trigger the method
+        const triggerButton = document.createElement('button');
+        triggerButton.textContent = 'Show SFs';
+        triggerButton.id = 'triggerButton';
+        document.body.appendChild(triggerButton);
 
-    let isBoxVisible = false; // Flag to track box visibility
-    let refreshInterval; // Interval for content refresh
+        let isBoxVisible = false; // Flag to track box visibility
+        let refreshInterval; // Interval for content refresh
 
-    triggerButton.onclick = () => {
-        if (!isBoxVisible) {
-            draggableFeedBox.style.display = 'block'; // Show the box
-            isBoxVisible = true;
-            triggerButton.classList.add('active'); // Add active class to button
+        triggerButton.onclick = () => {
+            if (!isBoxVisible) {
+                draggableFeedBox.style.display = 'block'; // Show the box
+                isBoxVisible = true;
+                triggerButton.classList.add('active'); // Add active class to button
+    
+                // Populate feed box initially
+                refreshContent();
+    
+                // Set interval for content refresh
+                refreshInterval = setInterval(refreshContent, 10000);
+            } else {
+                // If box is visible, hide it
+                draggableFeedBox.style.display = 'none';
+                isBoxVisible = false;
+                triggerButton.classList.remove('active'); // Remove active class from button
+                clearFeed(); // Clear the feed when hiding the box
+                // Clear the interval
+                clearInterval(refreshInterval);
+            }
+        };
+    }
 
-            // Populate feed box initially
-            refreshContent();
+    function addMasterButton() {
+        if (document.getElementById('masterButton') == null) {
+            const masterButton = document.createElement('button');
+            masterButton.textContent = 'FF';
+            masterButton.id = 'masterButton';
 
-            // Set interval for content refresh
-            refreshInterval = setInterval(refreshContent, 10000);
-        } else {
-            // If box is visible, hide it
-            draggableFeedBox.style.display = 'none';
-            isBoxVisible = false;
-            triggerButton.classList.remove('active'); // Remove active class from button
-            clearFeed(); // Clear the feed when hiding the box
-            // Clear the interval
-            clearInterval(refreshInterval);
+            masterButton.onclick = () => {
+                if (document.getElementById('triggerButton') == null) {
+                    addButton();
+                    clearInterval(masterinverval);
+                }
+            }
+            try {
+            document.getElementById('dio_culture_sort_control').insertBefore(masterButton, document.getElementById('dio_button_sort'));
+            } catch (err) {} // culture window not open
         }
-    };
+    }
 
     function refreshContent() {
         clearFeed();
@@ -194,4 +225,6 @@ const draggableStyles = `
             }
         }
     }
+
+    let masterinverval = setInterval(addMasterButton, 200);
 })();
