@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         FeestenFixed
-// @version      1.0.3
-// @author       Vonker en Huug
+// @version      2.0.0
+// @author       Vince & Egelman
 // @description Laat de steden zien waar je Stadsfeesten en Theaters kan activeren
 // @match        https://*.grepolis.com/game/*
 // @exclude      forum.*.grepolis.*/*
@@ -140,10 +140,10 @@
                 draggableFeedBox.style.display = 'block'; // Show the box
                 isBoxVisible = true;
                 triggerButton.classList.add('active'); // Add active class to button
-    
+
                 // Populate feed box initially
                 refreshContent();
-    
+
                 // Set interval for content refresh
                 refreshInterval = setInterval(refreshContent, 10000);
             } else {
