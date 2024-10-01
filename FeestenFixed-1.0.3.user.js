@@ -9,8 +9,12 @@
 // @grant        none
 // ==/UserScript==
 
-(function () {
+(async function () {
     'use strict';
+
+    // wait for page to load
+    var sleep = (n) => new Promise((res) => setTimeout(res, n));
+    await sleep(2000)
 
     const draggableStyles = `
         .draggable-box {
